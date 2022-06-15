@@ -1,39 +1,38 @@
 package cinema.service.impl;
 
 import cinema.dao.OrderDao;
-import cinema.lib.Inject;
-import cinema.lib.Service;
 import cinema.model.Order;
 import cinema.model.ShoppingCart;
-import cinema.model.Ticket;
 import cinema.model.User;
 import cinema.service.OrderService;
 import cinema.service.ShoppingCartService;
 import java.time.LocalDateTime;
 import java.util.List;
+import org.springframework.stereotype.Service;
 
 @Service
 public class OrderServiceImpl implements OrderService {
-    @Inject
-    private OrderDao orderDao;
-    @Inject
-    private ShoppingCartService shoppingCartService;
+    private final OrderDao orderDao;
+    private final ShoppingCartService shoppingCartService;
+
+    public OrderServiceImpl(OrderDao orderDao, ShoppingCartService shoppingCartService) {
+        this.orderDao = orderDao;
+        this.shoppingCartService = shoppingCartService;
+    }
 
     @Override
     public Order completeOrder(ShoppingCart shoppingCart) {
-        List<Ticket> tickets = shoppingCart.getTickets();
-        User user = shoppingCart.getUser();
         Order order = new Order();
-        order.setTickets(tickets);
-        order.setUser(user);
-        order.setOrderDate(LocalDateTime.now());
-        Order orderResult = orderDao.add(order);
-        shoppingCartService.clearShoppingCart(shoppingCart);
-        return orderResult;
+        order.setOrderTime(LocalDateTime.now());
+        order.setTickets(shoppingCart.getTickets());
+        order.setUser(shoppingCart.getUser());
+        orderDao.add(order);
+        shoppingCartService.clear(shoppingCart);
+        return order;
     }
 
     @Override
     public List<Order> getOrdersHistory(User user) {
-        return orderDao.getByUser(user);
+        return orderDao.getOrdersHistory(user);
     }
 }
