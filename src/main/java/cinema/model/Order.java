@@ -24,14 +24,11 @@ public class Order {
             joinColumns = @JoinColumn(name = "order_id"),
             inverseJoinColumns = @JoinColumn(name = "ticket_id"))
     private List<Ticket> tickets;
+    @Column(name = "order_time")
+    private LocalDateTime orderTime;
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
-    @Column(name = "order_date")
-    private LocalDateTime orderDate;
-
-    public Order() {
-    }
 
     public Long getId() {
         return id;
@@ -49,6 +46,14 @@ public class Order {
         this.tickets = tickets;
     }
 
+    public LocalDateTime getOrderTime() {
+        return orderTime;
+    }
+
+    public void setOrderTime(LocalDateTime orderTime) {
+        this.orderTime = orderTime;
+    }
+
     public User getUser() {
         return user;
     }
@@ -57,20 +62,12 @@ public class Order {
         this.user = user;
     }
 
-    public LocalDateTime getOrderDate() {
-        return orderDate;
-    }
-
-    public void setOrderDate(LocalDateTime orderDate) {
-        this.orderDate = orderDate;
-    }
-
     @Override
     public String toString() {
-        return "Order{" + "id="
-                + id + ", tickets="
-                + tickets + ", user="
-                + user + ", orderDate="
-                + orderDate + '}';
+        return "Order{"
+                + "id=" + id
+                + ", tickets=" + tickets
+                + ", orderTime=" + orderTime
+                + ", user=" + user + '}';
     }
 }
